@@ -21,7 +21,7 @@ while True:
         first_time = False
 
     if choice == 'i':
-        print('You pressed help!')
+        print('This is a simple ')
     elif choice == 'w':
         city = input('What city would you like to view weather for?: ').strip()
         try:
@@ -31,7 +31,6 @@ while True:
     elif choice == 'h':
         print('Showing history!')
     elif choice == 'q':
-        print('Exiting application!')
-        sys.exit()
+        print('Exiting application!'); sys.exit()
     else:
         print('Unknown command entered.')
