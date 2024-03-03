@@ -7,13 +7,14 @@ API_KEY = "b249505b7e912e3b3b34821a4533c6f1" # API key
 # Define needed functions
 def get_weather(city):
     raw_weather_data = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}')
+    
     weather_data = (raw_weather_data.json())
     city_name, country_name = weather_data['name'], countries.get(weather_data['sys']['country']).name
     print(f"Showing current weather in {city_name}, {country_name}")
     return city_name, country_name
 
 # Main while loop to keep prompting user
-first_time = True; default = "Press [I] for help, [W] to get weather for a city, [H] for history and [Q] to quit: "
+first_time, default = True, "Press [I] for help, [W] to get weather for a city, [H] for history and [Q] to quit: "
 while True:
     choice = input("Welcome to CMD Weather! " + default if first_time == True else default).strip().lower()
 
