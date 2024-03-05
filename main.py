@@ -13,10 +13,9 @@ def get_weather(city): # Fetch and return data from API
     status = raw_weather_data.status_code
 
     # Status code error handling
-    if 500 <= status <= 599: print('The server was down. Try again in some time.')
-    elif 400 <= status <= 499: print('Incorrect city. Check the name of city you typed in.')
+    if 500 <= status <= 599: print('The server was down. Try again in some time.'); return None
+    elif 400 <= status <= 499: print('Incorrect city. Check the name of city you typed in.'); return None
     else: return sort_data(raw_weather_data.json())
-    return None
 
 def sort_data(data):
     # Define dictionary to contain sorted data
@@ -35,7 +34,13 @@ def sort_data(data):
 def load_history(n):
     with open("history.json", "r") as history:
         selected = json.loads(history.read())
+        keys_list = list(selected.keys())
+        if len(keys_list) == 0:
+            print('No past history this session.')
+            return None
 
+        if n > len(keys_list):
+            return selected
         # Return the last n searches and results
         return {i:selected[i] for i in list(selected.keys())[::-1][0:int(n)]}
 
@@ -52,13 +57,13 @@ def save_history(item) -> None:
 def clear_history():
     # Clear the file and replace with an empty JSON object
     with open('history.json', 'w') as write_history:
-        print('sdfsd')
-        write_history.write(json.dumps('{}'))
+        write_history.write(json.dumps({}))
 
-def display(data):
+def display(data, history=False):
     # Display data to the user in a readable format
     print(f"\nShowing current weather in {data['place']}")
-    print(f"Current temperature: {data['temp']} Feels like {data['feels_like']}")
+    print(f"The current temperature is: {data['temp']}°C but it feels like {data['feels_like']}°C")
+    print(f"\n")
 
 # Main while loop to keep prompting user
 first_time, default = True, "Press [I] for help, [W] to get weather for a city, [H] for history and [Q] to quit: "
@@ -69,25 +74,25 @@ while True:
 
     # CLI implementation - give user options to choose from
     if choice == 'i':
-        print('This is a simple application to show the weather.\nCommands are [W] to get the weather, [H] for history and [Q] to quit.')
+        print("""This is a simple application to show the weather.
+            Commands are [W] to get the weather, [H] for history and [Q] to quit.
+            
+            History will get you the last n searches in this session.""")
     elif choice == 'w':
         city = input('What city would you like to view weather for?: ').strip()
         data = get_weather(city)
         display(data); save_history(data)
     elif choice == 'h':
         number = input("Number of previous searches to view: ")
-        session_history = load_history(number)
-
-        print()
-        for k in session_history.keys():
-            print(f'****{k}****')
-            display(session_history[k]); print()
+        session_history = load_history(int(number))
+        if session_history is not None:
+            # Print out requested amount of past searches
+            print()
+            for k in session_history.keys():
+                print(f'****{k}****'); display(session_history[k]); print()
     elif choice == 'q': 
-        print('Exiting application!')
-        clear_history()
-        sys.exit()
+        print('Exiting application!'); clear_history(); sys.exit()
     else:
         print('Unknown command entered.')
 
-    if choice.lower() in ['i', 'w', 'h']:
-        time.sleep(5)
+    if choice.lower() in ['i', 'w', 'h']: time.sleep(2)
