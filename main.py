@@ -63,12 +63,12 @@ def clear_history():
     with open('history.json', 'w') as write_history:
         write_history.write(json.dumps({}))
 
-def display(data, history=False):
+def display(data):
     # Display data to the user in a readable format
     print(f"{BLUE}Showing current weather in {data['place']}")
     print(f"The current temperature is {data['temp']}°C and it feels like {data['feels_like']}°C")
     print(f"\nHumidity right now is {data['humidity']}%")
-    print(f"Wind direction is {data['wind_direction']} and wind speed is {data['wind_speed']}km/h.\n")
+    print(f"Wind is coming from {data['wind_direction']} and wind speed is {data['wind_speed']}km/h.\n")
     print(f"General description of weather today: {data['weather']}")
     print(f"Sunrise time is {data['sunrise']} and sunset time is {data['sunset']}.")
 
