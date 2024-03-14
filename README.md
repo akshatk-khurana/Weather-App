@@ -13,4 +13,3 @@ This is quite a basic app but has the following enabled:
 Prior to running the application run ```pip(3) -r install requirements.txt``` in the terminal.
 Also make sure the **history.json** file is in the same directory as **main.py**.
 Finally, to run the application run ```python(3) main.py```
->>>>>>> Stashed changes
