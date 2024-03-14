@@ -1,10 +1,4 @@
 # Weather App
-<<<<<<< Updated upstream
-A simple weather app with scope for experimentation. Built as a CLI using Python.
-
-## How To Run
-First install 
-=======
 
 ## Description
 A command line weather app that allows users to get the weather of a certain city in the current moment. It uses the OpenWeatherA
