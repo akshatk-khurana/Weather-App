@@ -1,7 +1,7 @@
 # Weather App
 
 ## Description
-A command line weather app that allows users to get the weather of a certain city in the current moment. It uses the OpenWeatherA
+A command line weather app that allows users to get the weather of a certain city in the current moment. It uses the [OpenWeatherMap Current Weather API] (https://openweathermap.org/current )
 
 ## Features
 This is quite a basic app but has the following enabled:
