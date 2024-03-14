@@ -1,6 +1,7 @@
-import requests, sys, os, json, time
-from datetime import datetime
-from iso3166 import countries
+import requests, sys, os, json, time # General utility modules
+from datetime import datetime # Work with date time
+from iso3166 import countries # To convert country codes to names
+from colorama import Fore # To add colours to CLI
 
 API_KEY = "b249505b7e912e3b3b34821a4533c6f1" # API key
 
@@ -8,10 +9,10 @@ API_KEY = "b249505b7e912e3b3b34821a4533c6f1" # API key
 RED, GREEN, BLUE = "\033[0;31m", "\033[0;32m", "\033[0;34m"
 
 # Define needed functions
-def readable_time(unix): 
+def readable_time(unix): # Convert a UNIX timestamp to a readable one
     return datetime.fromtimestamp(int(unix)).strftime('%H:%M:%S')
 
-def clear_screen():
+def clear_screen(): # Clear screen based off OS 
     os.system('cls' if os.name == 'nt' else "clear") 
 
 def get_weather(city): # Fetch and return data from API
@@ -19,18 +20,20 @@ def get_weather(city): # Fetch and return data from API
     status = raw_weather_data.status_code
 
     # Status code error handling
-    if 500 <= status <= 599: print('The server was down. Try again in some time.'); return None
-    elif 400 <= status <= 499: print('\nIncorrect city. Check the name of city you typed in.\n'); return None
-    else: return sort_data(raw_weather_data.json())
+    if 500 <= status <= 599: # If server errors occur.
+        print('The server was down. Try again in some time.'); return None
+    elif 400 <= status <= 499: # If the user inputs invalid city.
+        print('\nIncorrect city. Check the name of city you typed in.\n'); return None
+    else: 
+        return sort_data(raw_weather_data.json())
 
-def degrees_to_compass(degrees):
+def degrees_to_compass(degrees): # Convert degrees to compass directions
     directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
     index = int((degrees + 11.25)/22.5)
     return directions[index % 16]
 
-def sort_data(data):
-    # Define dictionary to contain sorted data
-    info = dict()
+def sort_data(data): # Sort out needed values
+    info = dict() # Define dictionary to contain sorted data
 
     # Add selected data to above defined dictionary
     info['place'] = f"{data['name']}, {countries.get(data['sys']['country']).name}"
@@ -40,7 +43,6 @@ def sort_data(data):
     info['weather'] = data['weather'][0]['description']
     info['sunrise'], info['sunset'] = readable_time(data['sys']['sunrise']), readable_time(data['sys']['sunset'])
     info['wind_speed'], info['wind_direction'] = int(data['wind']['speed'])*3.6, degrees_to_compass(data['wind']['deg'])
-    
     return info
 
 def load_history():
@@ -48,9 +50,9 @@ def load_history():
         # Return the last n searches and results
         return json.loads(history.read())
 
-def save_history(item) -> None:
+def save_history(item):
     with open('history.json', 'r') as read_history:
-        # Set key value pair of timestamp and what was looked up at that time
+        # Set key value pair of timestamp and search
         history = json.loads(read_history.read())
         history[datetime.now().strftime('%H:%M:%S')] = item
 
@@ -80,7 +82,7 @@ while True:
 
     # CLI implementation - give user options to choose from
     if choice == 'i':
-        print(GREEN+"\nCommands are [W] to get the weather, [H] for history and [Q] to quit. They are case-insensitive. i.e both w and W will work!")
+        print(Fore.GREEN+"\nCommands are [W] to get the weather, [H] for history and [Q] to quit. They are case-insensitive. i.e both w and W will work!")
         print("You will be asked if you want to clear interactions in the terminal after each command.")
         print("History [H] will allow you to scroll through.")
         print("Quiting [Q] will exit the application and clear your search history for the session.\n")
@@ -88,9 +90,7 @@ while True:
         city = input('\nWhat city would you like to view weather for?: ').strip()
         data = get_weather(city)
         if data is not None:
-            print()
-            display(data)
-            print()
+            print(); display(data); print()
             save_history(data)
     elif choice == 'h':
         clear_screen()
@@ -101,21 +101,27 @@ while True:
         if len(keys) > 0:
             index = 1
             while True:
-                print(f'{BLUE}\n------{keys[index-1]}------'); display(session_history[keys[index-1]]); print('----------------------\n')
+                # Show first portion of history
+                print(f'{Fore.BLUE}\n------{keys[index-1]}------')
+                display(session_history[keys[index-1]])
+                print('----------------------\n')
+
                 print(f'SHOWING SEARCH {index} OF {len(keys)}')
                 scroll = input('Press [F] to go forwards, [B] to go backwards and [E] to exit history scrolling: ').lower()
-                if scroll == 'b':
+                clear_screen()
+                if scroll == 'b': # Move backwards
                     index = index - 1 if index > 1 else index
-                    clear_screen()
-                elif scroll == 'f':
+                elif scroll == 'f': # Move forwards
                     index = index + 1 if index < len(keys) else index
-                    clear_screen()
                 elif scroll == 'e':
-                    break
-        else: print('No past search history.')
+                    break # Go back to main loop
+        else: 
+            print('No past search history.')
     elif choice == 'q': 
         print('Exiting application!'); clear_history(); sys.exit()
-    else: print('Unknown command entered.')
+    else: 
+        print('Unknown command entered.')
 
-    if input(RED+"Clear past interactions in the terminal? (y/press any other key): ").lower() == 'y':
+    # Ask user if they want to clear their screen
+    if input(Fore.RED+"Clear past interactions in the terminal? (y/press any other key): ").lower() == 'y':
         clear_screen()
