@@ -34,9 +34,14 @@ def degrees_to_compass(degrees): # Convert degrees to compass directions
 
 def sort_data(data): # Sort out needed values
     info = dict() # Define dictionary to contain sorted data
+    country = None
+    try:
+        country = countries.get(data['sys']['country']).name
+    except:
+        country = ''
 
     # Add selected data to above defined dictionary
-    info['place'] = f"{data['name']}, {countries.get(data['sys']['country']).name}"
+    info['place'] = f"{data['name']}, {country}"
     info['humidity'] = data['main']['humidity']
     info['temp'], info['feels_like'] = data['main']['temp'], data['main']['feels_like']
     info['max'], info['min'] = data['main']['temp_max'], data['main']['temp_min']
@@ -75,9 +80,9 @@ def display(data):
     print(f"Sunrise time is {data['sunrise']} and sunset time is {data['sunset']}.")
 
 # Main while loop to keep prompting user
-first_time, default = True, RED+"Press [I] for help, [W] to get weather for a city, [H] for history and [Q] to quit: "
+first_time, default = True, Fore.RED+"Press [I] for help, [W] to get weather for a city, [H] for history and [Q] to quit: "
 while True:
-    choice = input(RED+"Welcome to CMD Weather! \n" + default if first_time == True else default).strip().lower()
+    choice = input(Fore.RED+"Welcome to CMD Weather! \n" + default if first_time == True else default).strip().lower()
     first_time = False
 
     # CLI implementation - give user options to choose from
