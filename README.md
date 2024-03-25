@@ -21,6 +21,8 @@ This is quite a basic app but has the following enabled:
 - Any errors are handled, especially those to do with using an external API. There are checks in place for the response received and deliver an appropriate message or response to the user. e.g 200 is good, 400 is a user error (wrong city typed), 500 is a server error (if the API server crashes)
 
 ## How to run
-Prior to running the application run ```pip(3) -r install requirements.txt``` in the terminal.
-Also make sure the **history.json** file is in the same directory as **main.py**.
+Prior to running the application do the following:
+- run ```pip(3) -r install requirements.txt``` in the terminal.
+- make sure the **history.json** file is in the same directory as **main.py**
+- replace the API_KEY variable in **main.py** with your OpenWeatherMap API key.
 Finally, to run the application run ```python(3) main.py```
