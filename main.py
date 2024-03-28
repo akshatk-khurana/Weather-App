@@ -1,12 +1,10 @@
 import requests, sys, os, json, time # General utility modules
 from datetime import datetime # Work with date time
 from iso3166 import countries # To convert country codes to names
-from colorama import Fore # To add colours to CLI
+from colorama import Fore, init # To add colours to CLI
 
 API_KEY = "b249505b7e912e3b3b34821a4533c6f1" # API key
-
-# Define formatting colours
-RED, GREEN, BLUE = "\033[0;31m", "\033[0;32m", "\033[0;34m"
+init() # Initialise colours
 
 # Define needed functions
 def readable_time(unix): # Convert a UNIX timestamp to a readable one
@@ -36,12 +34,12 @@ def sort_data(data): # Sort out needed values
     info = dict() # Define dictionary to contain sorted data
     country = None
     try:
-        country = countries.get(data['sys']['country']).name
+        country = ', '+countries.get(data['sys']['country']).name
     except:
         country = ''
 
     # Add selected data to above defined dictionary
-    info['place'] = f"{data['name']}, {country}"
+    info['place'] = f"{data['name']}{country}"
     info['humidity'] = data['main']['humidity']
     info['temp'], info['feels_like'] = data['main']['temp'], data['main']['feels_like']
     info['max'], info['min'] = data['main']['temp_max'], data['main']['temp_min']
@@ -72,10 +70,10 @@ def clear_history():
 
 def display(data):
     # Display data to the user in a readable format
-    print(f"{BLUE}Showing current weather in {data['place']}")
+    print(f"{Fore.BLUE}Showing current weather in {data['place']}")
     print(f"The current temperature is {data['temp']}°C and it feels like {data['feels_like']}°C")
     print(f"\nHumidity right now is {data['humidity']}%")
-    print(f"Wind is coming from {data['wind_direction']} and wind speed is {data['wind_speed']}km/h.\n")
+    print(f"Wind direction is {data['wind_direction']} and wind speed is {data['wind_speed']}km/h.\n")
     print(f"General description of weather today: {data['weather']}")
     print(f"Sunrise time is {data['sunrise']} and sunset time is {data['sunset']}.")
 
@@ -87,10 +85,10 @@ while True:
 
     # CLI implementation - give user options to choose from
     if choice == 'i':
-        print(Fore.GREEN+"\nCommands are [W] to get the weather, [H] for history and [Q] to quit. They are case-insensitive. i.e both w and W will work!")
-        print("You will be asked if you want to clear interactions in the terminal after each command.")
-        print("History [H] will allow you to scroll through.")
-        print("Quiting [Q] will exit the application and clear your search history for the session.\n")
+        print(Fore.GREEN+"\nCommands are case-insensitive. i.e both w and W will work!")
+        print("[W] will let you get the weather for a city/place.")
+        print("[H] will allow you to scroll through your past history of searches.")
+        print("[Q] will exit the application and clear your search history for the session.\n")
     elif choice == 'w':
         city = input('\nWhat city would you like to view weather for?: ').strip()
         data = get_weather(city)
