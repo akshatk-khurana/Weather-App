@@ -25,5 +25,5 @@ This is quite a basic app but has the following enabled:
 Prior to running the application do the following:
 - run ```pip -r install requirements.txt``` in the terminal
 - make sure the **history.json** file is in the same directory as **main.py**
-- replace the API_KEY variable in **main.py** with your OpenWeatherMap API key
-Finally, to run the application run ```python main.py``` in the directory of the project.
+- replace the API_KEY variable in **main.py** with your OpenWeatherMap API key.
+- Finally, to run the application run ```python main.py``` in the directory of the project.
